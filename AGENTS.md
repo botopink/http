@@ -1,9 +1,8 @@
 # http
 
-> Path: `libs/http/`
-> Parent: [`../AGENTS.md`](../AGENTS.md) · Root: [`../../AGENTS.md`](../../AGENTS.md)
+> Repository: `botopink/http` (`git@github.com:botopink/http.git`) · in the meta checkout: `repository/http/`
 
-The bundled `http` library (decision 196; the criterion is decisions 115–117): the codecs
+The `http` library (decision 196; the criterion is decisions 115–117): the codecs
 of HTTP semantics that rakun and onze both read and write — **one** implementation
 compiled for erlang and commonJS, so a server and a test client, or two frameworks,
 cannot disagree byte for byte. Pure codecs: no wire parser (the HTTP/1.1 head parsers
@@ -17,11 +16,13 @@ value (decision 181), one strict q-value grammar for media, encodings and langua
 the wire. No exported name repeats one std or a framework exports (decision 163): the
 modules are reached qualified (`cookie.parse`, never a bare `cookies`).
 
-**Bundled.** `build.zig`'s `bundled_packages` names it after `routing` (it imports std
-only): any program's `from "http"` loads the copy embedded in the compiler, as
-`http/<module>` (atoms `http@<module>`), with no `dependencies` entry and never from this
-directory; listing `http` in `dependencies` is refused. An edit here reaches a consumer
-only through a rebuilt compiler.
+**A library of its own** (decision 326). It was bundled with the compiler until
+`03-bundled-libs/138` moved it here with its history; the compiler now embeds std alone.
+A program that imports `from "http"` declares it in `dependencies` (decision 242) —
+`{ "http": { "git": "https://github.com/botopink/http.git", "branch": "feat" } }`; inside the meta checkout that entry
+resolves by name through the `repository/` root (`repository/http`), elsewhere
+through the install store. Without the entry, `from "http"` is
+`unresolved import source "http" — declare it in botopink.json "dependencies"`.
 
 `.bp` only (decision 117): the one host cell is the `wide` widening in `lexical.bp`, an
 inline `#[@External]` template on both targets. It imports `std` (`encoding`, `io.clock`)
@@ -66,10 +67,9 @@ Consumers: `import {cookie, accept} from "http";` then `cookie.get(header, "SID"
 ## Testing
 
 ```sh
-cd libs/http
-../../zig-out/bin/botopink test --target erlang
-../../zig-out/bin/botopink test --target commonJS
-../../zig-out/bin/botopink format --check src test
+../botopink-lang/zig-out/bin/botopink test --target erlang
+../botopink-lang/zig-out/bin/botopink test --target commonJS
+../botopink-lang/zig-out/bin/botopink format --check src test
 ```
 
 Every expected text is a literal, the same on both rows. `zig build test-libs -- --lib http`
@@ -84,3 +84,24 @@ runs the two cells.
   grammar itself before decoding.
 - Non-ASCII literals are avoided in sources and tests (erlang truncates them and
   `String.length` can raise on them); every message text is ASCII.
+
+## Local gate
+
+`scripts/git-hooks/pre-commit` is the tracked pre-commit gate, self-contained:
+it sources `scripts/git-hooks/lib/runner-standalone.sh` from this repository and
+reaches nothing outside it, so a standalone clone, a checkout inside the botopink
+meta workspace and a worktree run the same gate. Install it once per clone:
+
+```sh
+git config core.hooksPath scripts/git-hooks
+```
+
+The repository is one plain package, so the gate's test stage runs
+`botopink test --target <t>` at the root on each target `botopink.json` declares
+(`erlang`, `commonJS`). Never commit with `--no-verify`; fix the red instead.
+`scripts/git-hooks/pre-commit` and `scripts/git-hooks/lib/runner-standalone.sh`
+are one text across every library repository: the meta repository's
+`hook-integrity` workflow compares the bytes (its check 4), so a change to either
+lands in all of them together. CI: `.github/workflows/test.yml` runs the same
+package on linux and macos, on each declared target, with the compiler built from
+`botopink/botopink-lang` `feat`.
