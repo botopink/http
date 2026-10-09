@@ -166,9 +166,9 @@ pub fn render(d: CacheDirectives) -> string {
     if (d.noStore) parts.push("no-store");
     if (d.noCache) parts.push("no-cache");
     val maxAge: ?i32 = d.maxAge;
-    if (maxAge != null) parts.push("max-age=" + (maxAge ?? 0).toString());
+    if (maxAge != null) parts.push("max-age=" + maxAge.toString());
     val shared: ?i32 = d.sharedMaxAge;
-    if (shared != null) parts.push("s-maxage=" + (shared ?? 0).toString());
+    if (shared != null) parts.push("s-maxage=" + shared.toString());
     if (d.mustRevalidate) parts.push("must-revalidate");
     if (d.proxyRevalidate) parts.push("proxy-revalidate");
     if (d.noTransform) parts.push("no-transform");

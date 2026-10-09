@@ -109,7 +109,7 @@ test "http: an absent maxAge writes a session cookie" {
 
 test "http: a serialized value reads back" {
     val line = serialize("s", "a=b; c%d", lax(60));
-    val value = line.split(";").at(0).unwrapOr("");
+    val value = line.split(";").at(0) ?? "";
     try asserts.equals(shown(get(value, "s")), "a=b; c%d");
 }
 

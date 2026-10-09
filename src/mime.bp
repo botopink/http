@@ -13,9 +13,9 @@ import {lexical.sub};
 // `README` → `readme`).
 pub fn extensionOf(pathOrExt: string) -> string {
     val pieces = pathOrExt.split("/");
-    val name = pieces.at(pieces.length - 1).unwrapOr("");
+    val name = pieces.at(pieces.length - 1) ?? "";
     val parts = name.split(".");
-    return parts.at(parts.length - 1).unwrapOr("").toLower();
+    return (parts.at(parts.length - 1) ?? "").toLower();
 }
 
 fn mediaTypeOf(ext: string) -> string {

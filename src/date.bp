@@ -61,11 +61,11 @@ pub fn formatHttpDate(epochMillis: i64) -> string {
                 + " has no IMF-fixdate spelling",
         );
     return [
-        dayNames().at(c.weekday - 1).unwrapOr(""),
+        dayNames().at(c.weekday - 1) ?? "",
         ", ",
         padded(c.day, 2),
         " ",
-        monthNames().at(c.month - 1).unwrapOr(""),
+        monthNames().at(c.month - 1) ?? "",
         " ",
         padded(c.year, 4),
         " ",
@@ -258,7 +258,7 @@ pub fn parseHttpDate(text: string, nowMillis: i64) -> @Result<i64, string> {
         throw problemText(text, "names a day its month does not have");
     val days = daysFromCivil(f.year, f.month, f.day);
     val names = if (f.long) longDayNames() else dayNames();
-    val expected = names.at(weekdayOf(days) - 1).unwrapOr("");
+    val expected = names.at(weekdayOf(days) - 1) ?? "";
     if (f.dayName != expected)
         throw problemText(text, "names the wrong day of the week");
     val seconds = wide(days) * wide(86400) + wide(h * 3600 + mi * 60 + s);

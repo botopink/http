@@ -32,7 +32,7 @@ pub fn printableChars() -> string {
 }
 
 pub fn charOf(s: string, i: i32) -> string {
-    return s.at(i).unwrapOr("");
+    return s.at(i) ?? "";
 }
 
 pub fn sub(s: string, begin: i32, end: i32) -> string {

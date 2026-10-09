@@ -118,7 +118,7 @@ fn mediaParamsOf(pieces: Array<string>) -> Array<#(string, string)> {
 
 fn mediaRangeOf(element: string) -> ?MediaRange {
     val pieces = element.split(";");
-    val base = trimOws(pieces.at(0).unwrapOr("")).toLower();
+    val base = trimOws(pieces.at(0) ?? "").toLower();
     val slash = base.indexOf("/");
     if (slash <= 0) return null;
     val mainType = sub(base, 0, slash);
@@ -144,15 +144,7 @@ pub fn parseAccept(header: string) -> Array<MediaRange> {
     for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?MediaRange = mediaRangeOf(element);
-            if (r != null)
-                out.push(
-                    r ?? MediaRange(
-                        mainType: "",
-                        subType: "",
-                        params: [],
-                        q: 0,
-                    ),
-                );
+            if (r != null) out.push(r);
         }
     }
     return out;
@@ -185,7 +177,7 @@ fn specificity(r: MediaRange, t: MediaRange) -> i32 {
 pub fn mediaQuality(accept: string, mediaType: string) -> i32 {
     val wanted: ?MediaRange = mediaRangeOf(mediaType);
     if (wanted == null) return 0;
-    val t = wanted ?? MediaRange(mainType: "", subType: "", params: [], q: 0);
+    val t = wanted;
     if ((t.mainType == "*") || (t.subType == "*")) return 0;
     if (trimOws(accept) == "") return 1000;
     var best = 0;
@@ -223,7 +215,7 @@ type TokenEntry(name: string, q: i32)
 
 fn tokenEntryOf(element: string) -> TokenEntry {
     val pieces = element.split(";");
-    val name = trimOws(pieces.at(0).unwrapOr("")).toLower();
+    val name = trimOws(pieces.at(0) ?? "").toLower();
     val q = weightOf(pieces.slice(1, pieces.length));
     if ((isToken(name) == false) || (q < 0)) return TokenEntry(name: "", q: 0);
     return TokenEntry(name: name, q: q);
@@ -275,7 +267,7 @@ fn isLanguageRange(tag: string) -> bool {
     var ok = true;
     var i = 0;
     while (i < parts.length) {
-        val p = parts.at(i).unwrapOr("");
+        val p = parts.at(i) ?? "";
         val sizeOk = (p.length() >= 1) && (p.length() <= 8);
         val charsOk = if (i == 0)
             isAlpha(p)
@@ -289,7 +281,7 @@ fn isLanguageRange(tag: string) -> bool {
 
 fn languageRangeOf(element: string) -> ?LanguageRange {
     val pieces = element.split(";");
-    val tag = trimOws(pieces.at(0).unwrapOr(""));
+    val tag = trimOws(pieces.at(0) ?? "");
     if (isLanguageRange(tag) == false) return null;
     val q = weightOf(pieces.slice(1, pieces.length));
     if (q < 0) return null;
@@ -304,7 +296,7 @@ pub fn parseAcceptLanguage(header: string) -> Array<LanguageRange> {
     for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?LanguageRange = languageRangeOf(element);
-            if (r != null) entries.push(r ?? LanguageRange(tag: "", q: 0));
+            if (r != null) entries.push(r);
         }
     }
     var out: Array<LanguageRange> = [];

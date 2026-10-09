@@ -80,18 +80,24 @@ test "http: parseAccept keeps order, lowercases, and drops what does not parse" 
         "Text/HTML;Level=1;q=0.5;ext=x, */html, bad, a/b;q, text/plain;charset=UTF-8",
     );
     try asserts.equals(ranges.length, 2);
-    val first = ranges
-        .at(0)
-        .unwrapOr(MediaRange(mainType: "", subType: "", params: [], q: 0));
+    val first = ranges.at(0) ?? MediaRange(
+        mainType: "",
+        subType: "",
+        params: [],
+        q: 0,
+    );
     try asserts.equals(first.mainType + "/" + first.subType, "text/html");
     try asserts.equals(first.q, 500);
     try asserts.equals(
         first.params.map({ p -> p.0 + "=" + p.1 }).join(";"),
         "level=1",
     );
-    val second = ranges
-        .at(1)
-        .unwrapOr(MediaRange(mainType: "", subType: "", params: [], q: 0));
+    val second = ranges.at(1) ?? MediaRange(
+        mainType: "",
+        subType: "",
+        params: [],
+        q: 0,
+    );
     try asserts.equals(
         second.params.map({ p -> p.0 + "=" + p.1 }).join(";"),
         "charset=utf-8",

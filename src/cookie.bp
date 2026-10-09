@@ -97,7 +97,7 @@ pub fn parse(header: string) -> Array<#(string, string)> {
                 val value: ?string = chunkValue(
                     trimOws(sub(chunk, eq + 1, chunk.length())),
                 );
-                if (value != null) out.push(#(name, value ?? ""));
+                if (value != null) out.push(#(name, value));
             }
         }
     }
@@ -205,7 +205,7 @@ pub fn serialize(
     val domain = attrs.domain;
     if (domain != "") out = out + "; Domain=" + domain;
     val maxAge: ?i32 = attrs.maxAge;
-    if (maxAge != null) out = out + "; Max-Age=" + (maxAge ?? 0).toString();
+    if (maxAge != null) out = out + "; Max-Age=" + maxAge.toString();
     if (attrs.httpOnly) out = out + "; HttpOnly";
     if (attrs.secure) out = out + "; Secure";
     val sameSite = attrs.sameSite;
