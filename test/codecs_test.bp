@@ -95,7 +95,7 @@ test "http: parseRange ignores what it does not read (200)" {
     try asserts.equals(rangeText("bytes=+0-1", 100), "200 ");
     try asserts.equals(rangeText("bytes=0", 100), "200 ");
     try asserts.equals(rangeText("bytes=a-b", 100), "200 ");
-    try asserts.equals(rangeText("bytes=0-99999999999999999", 100), "200 ");
+    try asserts.equals(rangeText("bytes=0-99999999999999999999", 100), "200 ");
 }
 
 test "http: parseRange counts past 2 GiB" {

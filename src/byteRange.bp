@@ -13,7 +13,7 @@
 ////   not understand is ignored), a range set of more than one range (§ 14.2
 ////   lets a server ignore `Range`; a multipart/byteranges body is not built),
 ////   and anything that does not parse: whitespace inside the range, a sign,
-////   `last < first`, a number beyond 2^53 - 1.
+////   `last < first`, a number past the `i64` range.
 ////
 //// Sizes and offsets are `i64` — a file larger than 2 GiB is an ordinary
 //// file.
@@ -30,7 +30,7 @@ fn unsatisfiable() -> ByteRange {
     return ByteRange(status: 416, first: wide(0 - 1), last: wide(0 - 1));
 }
 
-// The value of a run of digits, or -1 when it is not one or is beyond 2^53 - 1.
+// The value of a run of digits, or -1 when it is not one or is past the `i64` range.
 fn offsetOf(digits: string) -> i64 {
     if (isDigits(digits) == false) return wide(0 - 1);
     return case digits.parseInt() {
