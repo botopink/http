@@ -1,5 +1,7 @@
 # http
 
+`decisions-taken.md` is generated — from the meta repository's `specs/<milestone>/decisions-taken.md` by `scripts/decisions-split.py`; edit it there, never here.
+
 > Repository: `botopink/http` (`git@github.com:botopink/http.git`) · in the meta checkout: `repository/http/`
 
 The `http` library (decision 196; the criterion is decisions 115–117): the codecs
