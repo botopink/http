@@ -141,18 +141,18 @@ test "http: staticFile is rakun-web's cacheHeader" {
 test "http: cacheControl refuses a contradiction" {
     try asserts.throwsWith({ ->
         withPrivate(withPublic(directives()));
-        0;
+        0
     }, "a response is public or private, not both");
     try asserts.throwsWith({ ->
         withMaxAge(directives(), -1);
-        0;
+        0
     }, "max-age is a number of seconds, 0 or more");
     try asserts.throwsWith({ ->
         render(withMaxAge(withNoStore(directives()), 10));
-        0;
+        0
     }, "no-store forbids storing");
     try asserts.throwsWith({ ->
         render(withImmutable(withNoCache(directives())));
-        0;
+        0
     }, "immutable needs a max-age");
 }

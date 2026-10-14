@@ -116,7 +116,7 @@ test "http: a serialized value reads back" {
 test "http: serialize refuses what cannot be written" {
     try asserts.throwsWith({ ->
         serialize("a b", "1", lax(0));
-        0;
+        0
     }, "a cookie name is an RFC 9110 token");
     try asserts.throwsWith({ ->
         serialize(
@@ -131,7 +131,7 @@ test "http: serialize refuses what cannot be written" {
                 sameSite: "Lax",
             ),
         );
-        0;
+        0
     }, "has a Path with");
     try asserts.throwsWith({ ->
         serialize(
@@ -146,7 +146,7 @@ test "http: serialize refuses what cannot be written" {
                 sameSite: "Lax",
             ),
         );
-        0;
+        0
     }, "has a Domain that is not a host name");
     try asserts.throwsWith({ ->
         serialize(
@@ -161,7 +161,7 @@ test "http: serialize refuses what cannot be written" {
                 sameSite: "lax",
             ),
         );
-        0;
+        0
     }, "it is Strict, Lax or None");
     try asserts.throwsWith({ ->
         serialize(
@@ -176,7 +176,7 @@ test "http: serialize refuses what cannot be written" {
                 sameSite: "None",
             ),
         );
-        0;
+        0
     }, "SameSite=None without Secure");
 }
 
@@ -194,7 +194,7 @@ test "http: the __Secure- and __Host- prefixes demand their attributes" {
                 sameSite: "Lax",
             ),
         );
-        0;
+        0
     }, "the __Secure- prefix without Secure");
     try asserts.throwsWith({ ->
         serialize(
@@ -209,7 +209,7 @@ test "http: the __Secure- and __Host- prefixes demand their attributes" {
                 sameSite: "Lax",
             ),
         );
-        0;
+        0
     }, "the __Host- prefix without Secure, Path=/ and no Domain");
     try asserts.equals(
         serialize("__Host-s", "1", lax(null)),
