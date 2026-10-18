@@ -1,0 +1,5 @@
+//// This package's own `cookie` module, named like the `http` module it reads.
+
+pub fn describe(name: string, value: ?string) -> string {
+    return name + " is " + (value ?? "absent");
+}

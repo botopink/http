@@ -1,0 +1,7 @@
+//// The session reader, imported by `main` by its path.
+
+import {cookie.get} from "http";
+
+pub fn sessionOf(header: string) -> string {
+    return get(header, "SID") ?? "anonymous";
+}

@@ -1,3 +1,29 @@
 //// Decision 196 — `http` — `import {cookie, accept} from "http";` — one cookie reader, one q-value parser, one home for the header codecs,
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie, accept, mime, status} from "http";
+
+fn respond(cookieHeader: string, acceptHeader: string, encodingHeader: string) -> string {
+    val session = cookie.get(cookieHeader, "SID") ?? "anonymous";
+    val media = accept.negotiateMedia(acceptHeader, ["text/html", "application/json"]);
+    val coding = accept.negotiateToken(encodingHeader, ["br", "gzip"]);
+    val chosen = if (coding == "") "identity" else coding;
+    return session + " " + media + " " + chosen;
+}
+
+pub fn main() -> void {
+    val header = cookie.formatHeader([#("SID", "a 1"), #("theme", "dark")]);
+    terminal.print(header);
+    terminal.print(respond(header, "application/json, text/html;q=0.9", "gzip, br;q=0.5"));
+    terminal.print(mime.contentTypeOf("index.html"));
+    terminal.print(status.reasonPhrase(404));
+    val attrs = cookie.CookieAttributes(
+        path: "/",
+        domain: "",
+        maxAge: null,
+        httpOnly: true,
+        secure: true,
+        sameSite: "Lax",
+    );
+    terminal.print(cookie.serialize("SID", "a 1", attrs));
+}

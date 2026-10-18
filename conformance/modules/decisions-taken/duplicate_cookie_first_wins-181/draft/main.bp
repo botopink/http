@@ -1,3 +1,18 @@
 //// Decision 181 — † A duplicated cookie name: first wins, everywhere (RFC 6265 § 5.4); `rakun-session`'s `session_cookie` changes from las
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie} from "http";
+
+pub fn main() -> void {
+    // A later duplicate never overrides the first occurrence.
+    terminal.print(cookie.get("SID=first; SID=second", "SID") ?? "absent");
+    // A refused first occurrence still claims the name.
+    terminal.print(cookie.get("SID=%zz; SID=second", "SID") ?? "absent");
+    // Each name once, its first value, in header order.
+    val pairs = cookie.parse("theme=dark; SID=a1; theme=light; lang=pt");
+    terminal.print(pairs.map({ p -> p.0 + "=" + p.1 }).join(", "));
+    // A header written with a name twice reads back its first value.
+    val header = cookie.formatHeader([#("SID", "a1"), #("SID", "b2")]);
+    terminal.print(header);
+    terminal.print(cookie.get(header, "SID") ?? "absent");
+}

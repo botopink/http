@@ -1,3 +1,19 @@
 //// Decision 346 — A `Bytes` primitive:
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {mime} from "http";
+
+// A binary payload is `bytes` where it enters; the media type says how to read it.
+fn describe(path: string, body: bytes) -> string {
+    val media = mime.contentTypeOf(path);
+    if (mime.isText(media) == false) return path + ": " + media + ", binary";
+    return case body.toUtf8() {
+        Ok(text) -> path + ": " + media + ", " + text;
+        Error(_) -> path + ": " + media + ", not UTF-8";
+    };
+}
+
+pub fn main() -> void {
+    terminal.print(describe("hello.txt", bytes.fromUtf8("hello")));
+    terminal.print(describe("pixel.png", bytes.fromUtf8("PNG")));
+}

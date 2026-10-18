@@ -1,3 +1,11 @@
 //// Decision 206 — `import {…} from "<name>"` resolves only to a package — std, a bundled package or a declared dependency.
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie.formatHeader, cookie.get} from "http";
+import {cookie.describe};
+
+pub fn main() -> void {
+    val header = formatHeader([#("SID", "a1")]);
+    terminal.print(describe("SID", get(header, "SID")));
+    terminal.print(describe("theme", get(header, "theme")));
+}

@@ -1,3 +1,23 @@
 //// Decision 182 — † One strict q-value grammar for media, encoding and language: at most three decimals, digits only; anything malformed r
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {accept} from "http";
+
+pub fn main() -> void {
+    val weights = ["1", "0.8", "0.125", "1.000", "0.1234", "1.5", ".5", " 0.5", "0.5a", "-0"];
+    for (weights) { text ->
+        terminal.print("[" + text + "] " + accept.qValue(text).toString());
+    }
+    // One grammar for media, encodings and languages.
+    terminal.print(
+        accept.negotiateMedia(
+            "application/json;q=0.0001, text/html;q=0.5",
+            ["application/json", "text/html"],
+        ),
+    );
+    terminal.print(accept.negotiateToken("gzip;q=1.5, br;q=0.9", ["gzip", "br"]));
+    val languages = accept.parseAcceptLanguage("pt-BR;q=0.9, en;q=0.95555, fr");
+    terminal.print(languages
+        .map({ l -> l.tag + ":" + l.q.toString() })
+        .join(", "));
+}

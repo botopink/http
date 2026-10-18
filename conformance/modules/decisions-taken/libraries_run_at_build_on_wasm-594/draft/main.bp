@@ -1,3 +1,27 @@
 //// Decision 594 — Every library runs at build on the wasm comptime runtime (434), jhonstart first; a function only Erlang or Node can run is a located error there.
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie, accept, status, cacheControl, mime} from "http";
+
+fn themeAttributes() -> cookie.CookieAttributes {
+    return cookie.CookieAttributes(
+        path: "/",
+        domain: "",
+        maxAge: 3600,
+        httpOnly: false,
+        secure: true,
+        sameSite: "Lax",
+    );
+}
+
+pub fn main() -> void {
+    // `http` runs at build on the wasm comptime runtime, whatever the target.
+    val line = comptime cookie.serialize("theme", "dark", themeAttributes());
+    terminal.print(line);
+    terminal.print(line
+        == cookie.serialize("theme", "dark", themeAttributes()));
+    terminal.print(comptime status.reasonPhrase(429));
+    terminal.print(comptime cacheControl.staticFile(31536000, true));
+    terminal.print(comptime accept.qValue("0.125"));
+    terminal.print(comptime mime.contentTypeOf("app.wasm"));
+}

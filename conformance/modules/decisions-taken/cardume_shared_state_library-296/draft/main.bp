@@ -1,3 +1,17 @@
 //// Decision 296 — `cardume` is a library of its own
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {atom} from "cardume";
+import {cookie, cookie.Cookie} from "http";
+
+pub type SessionId(value: string)
+
+// Shared state: cardume's atom, declared once, no string key.
+pub val cartCount = atom(0);
+
+// A cookie: `http`'s, not cardume's.
+pub val sessionCookie = Cookie<SessionId>("session", httpOnly: true, secure: true);
+
+pub fn main() -> void {
+    terminal.print(cookie.read(sessionCookie, "session=s-42")?.value ?? "no session");
+}

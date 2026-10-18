@@ -1,3 +1,28 @@
 //// Decision 294 — A cookie is declared once, typed:
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {io.clock} from "std";
+import {cookie, cookie.Cookie} from "http";
+
+pub type SessionId(value: string)
+
+pub type Theme { Light, Dark }
+
+pub val sessionCookie = Cookie<SessionId>(
+    "session",
+    httpOnly: true,
+    secure: true,
+    maxAge: clock.days(30),
+);
+
+pub val themeCookie = Cookie<Theme>("theme", httpOnly: false);
+
+pub fn main() -> void {
+    val header = "session=s-42; theme=Dark; theme=Light";
+    val id: ?SessionId = cookie.read(sessionCookie, header);
+    terminal.print(id?.value ?? "no session");
+    terminal.print(cookie.read(themeCookie, header) == Theme.Dark);
+    terminal.print(cookie.read(themeCookie, "theme=Blue") == null);
+    terminal.print(cookie.write(sessionCookie, SessionId(value: "s-43")));
+    terminal.print(cookie.clear(themeCookie));
+}

@@ -1,3 +1,37 @@
 //// Decision 623 — (a): `io/http`'s `fetch` has one typed surface, and `fetch(url)` is removed in the same commit.
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {io.http} from "std";
+import {cookie, status} from "http";
+
+fn report(r: Result<i32, http.HttpError>) -> string {
+    return case r {
+        Ok(code) -> code.toString() + " " + status.reasonPhrase(code);
+        Error(NotAllowedOnHost) -> "not allowed on this host";
+        Error(Network(_)) -> "network error";
+        Error(Timeout) -> "timed out";
+    };
+}
+
+fn statusOf(url: string) -> Task<Result<i32, http.HttpError>> {
+    val resp = try await http.fetch(http.Request(method: .Get, url: url));
+    return resp.status;
+}
+
+fn login(url: string, sid: string) -> Task<Result<i32, http.HttpError>> {
+    val header = http.Header(name: "cookie", value: cookie.formatHeader([#("SID", sid)]));
+    val resp = try await http.fetch(
+        http.Request(
+            method: .Post,
+            url: url,
+            headers: [header],
+            body: bytes.fromUtf8("remember=1"),
+        ),
+    );
+    return resp.status;
+}
+
+pub fn main() -> Task<void> {
+    terminal.print(report(await statusOf("http://127.0.0.1:9/")));
+    terminal.print(report(await login("http://127.0.0.1:9/login", "a1")));
+}

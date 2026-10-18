@@ -1,3 +1,7 @@
 # Decision 196 — `http` — `import {cookie, accept} from "http";` — one cookie reader, one q-value parser, one home for the header codecs,
 
+The example is a request handled the way rakun and onze-server both handle one, every header read through `http`. `import {cookie, accept, mime, status} from "http";` brings the modules as namespaces, and every call is qualified (`cookie.get`, `accept.negotiateMedia`), so no name meets a framework's own. `main` first writes a request `Cookie` header with `cookie.formatHeader`, which percent-encodes the value (`SID=a%201; theme=dark`). `respond` reads it back with the one cookie reader (`a 1`), picks a media type with the one q-value parser (`application/json`, weighed above `text/html;q=0.9`) and a coding with the same parser over `Accept-Encoding` (`gzip`, above `br;q=0.5`); it prints `a 1 application/json gzip`. The other codecs live beside them: `mime.contentTypeOf("index.html")` prints `text/html; charset=utf-8`, `status.reasonPhrase(404)` prints `Not Found`, and `cookie.serialize` writes the response's `Set-Cookie` line, `SID=a%201; Path=/; HttpOnly; Secure; SameSite=Lax`. The same source compiles for erlang and commonJS, so a server on one target and a test client on the other cannot disagree byte for byte.
+
+Cells in this repository that prove it: none yet. The codecs are tested in `test/` (suite `http:`); the readers rakun and onze-server still keep are deleted by front 155 s2, and the library's feature cells come with front 155's Conformance step (decision 465).
+
 [draft/main.bp](draft/main.bp)

@@ -1,3 +1,31 @@
 //// Decision 400 — A cookie's hooks are nouns in cardume's family — `cookieValue`, `cookieState`, `cookieSetter`, `cookieReset`.
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie, cookie.Cookie} from "http";
+
+pub type SessionId(value: string)
+
+pub val sessionCookie = Cookie<SessionId>("session", httpOnly: true, secure: true);
+
+// What `use cookieValue(sessionCookie)` answers: `?SessionId`.
+fn valueOf(header: string) -> ?SessionId {
+    return cookie.read(sessionCookie, header);
+}
+
+// What `cookieSetter` and `cookieState`'s `.set(v)` write: the declaration's attributes.
+fn setLine(id: SessionId) -> string {
+    return cookie.write(sessionCookie, id);
+}
+
+// What `cookieReset` sends: the cookie cleared, the declaration's attributes.
+fn resetLine() -> string {
+    return cookie.clear(sessionCookie);
+}
+
+pub fn main() -> void {
+    terminal.print(valueOf("session=s-42")?.value ?? "no session");
+    terminal.print(valueOf("theme=dark")?.value ?? "no session");
+    terminal.print(valueOf("session=%zz")?.value ?? "no session");
+    terminal.print(setLine(SessionId(value: "s-43")));
+    terminal.print(resetLine());
+}

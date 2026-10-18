@@ -1,3 +1,18 @@
 //// Decision 295 — Request state is atoms, read and written through `use`
 
-pub fn main() -> void {}
+import {io.terminal} from "std";
+import {cookie, cookie.Cookie} from "http";
+
+pub type SessionId(value: string)
+
+pub type Locale(tag: string)
+
+pub val sessionCookie = Cookie<SessionId>("session", httpOnly: true, secure: true);
+
+pub val localeCookie = Cookie<Locale>("locale", httpOnly: false);
+
+pub fn main() -> void {
+    val header = "session=s-42; locale=pt-BR";
+    terminal.print(cookie.read(sessionCookie, header)?.value ?? "no session");
+    terminal.print(cookie.read(localeCookie, header)?.tag ?? "no locale");
+}
