@@ -12,7 +12,7 @@
 //// days-from-civil count, no bitwise operator), so both targets answer the
 //// same instant.
 
-import {io.clock} from "std";
+import {io.clock, failure.panic} from "std";
 import {lexical.charOf, lexical.sub, lexical.isDigits, lexical.digitsValue, lexical.padded, lexical.idiv, lexical.wide};
 
 fn dayNames() -> Array<string> {
@@ -55,7 +55,7 @@ fn monthNames() -> Array<string> {
 pub fn formatHttpDate(epochMillis: i64) -> string {
     val c = clock.toCivil(epochMillis);
     if ((c.year < 0) || (c.year > 9999))
-        @panic(
+        panic(
             "http.date: year "
                 + c.year.toString()
                 + " has no IMF-fixdate spelling",
@@ -235,7 +235,7 @@ fn problemText(text: string, what: string) -> string {
 // The epoch milliseconds an HTTP-date names. `nowMillis` is only read for an
 // RFC 850 date's two-digit year, so the function stays pure — a caller passes
 // `clock.nowMillis()`.
-pub fn parseHttpDate(text: string, nowMillis: i64) -> @Result<i64, string> {
+pub fn parseHttpDate(text: string, nowMillis: i64) -> Result<i64, string> {
     val t = text.trim();
     val f = formOf(t, clock.toCivil(nowMillis).year);
     if (f.problem != "") throw problemText(text, f.problem);

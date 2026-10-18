@@ -23,7 +23,7 @@
 //// RAISE: a header line that cannot be written correctly is a programming
 //// error, never a line on the wire.
 
-import {encoding} from "std";
+import {encoding, failure.panic} from "std";
 import {lexical.charOf, lexical.sub, lexical.isToken, lexical.isPrintable, lexical.allIn, lexical.cookieOctetChars, lexical.trimOws, lexical.alphaChars, lexical.digitChars};
 
 // The attributes of one `Set-Cookie` line. `maxAge` absent (`null`) omits
@@ -130,13 +130,13 @@ fn problem(name: string, what: string) -> string {
 
 fn demandName(name: string) -> i32 {
     if (isToken(name) == false)
-        @panic(problem(name, "- a cookie name is an RFC 9110 token"));
+        panic(problem(name, "- a cookie name is an RFC 9110 token"));
     return 0;
 }
 
 fn demandValue(name: string, value: string) -> i32 {
     if (isPrintable(value) == false)
-        @panic(
+        panic(
             problem(
                 name,
                 "carries a character outside printable ASCII - there is no byte type, so the two targets cannot agree what octets that is; encode the value (base64url) first",
@@ -152,7 +152,7 @@ fn domainChars() -> string {
 fn demandAttributes(name: string, attrs: CookieAttributes) -> i32 {
     val path = attrs.path;
     if ((isPrintable(path) == false) || (path.indexOf(";") >= 0))
-        @panic(
+        panic(
             problem(
                 name,
                 "has a Path with `;` or a character outside printable ASCII",
@@ -160,26 +160,26 @@ fn demandAttributes(name: string, attrs: CookieAttributes) -> i32 {
         );
     val domain = attrs.domain;
     if (allIn(domain, domainChars()) == false)
-        @panic(problem(name, "has a Domain that is not a host name"));
+        panic(problem(name, "has a Domain that is not a host name"));
     val sameSite = attrs.sameSite;
     val knownSite = (sameSite == "")
         || (sameSite == "Strict")
         || (sameSite == "Lax")
         || (sameSite == "None");
     if (knownSite == false)
-        @panic(
+        panic(
             problem(
                 name,
                 "has SameSite `" + sameSite + "` - it is Strict, Lax or None",
             ),
         );
     if ((sameSite == "None") && (attrs.secure == false))
-        @panic(problem(name, "has SameSite=None without Secure"));
+        panic(problem(name, "has SameSite=None without Secure"));
     if (name.startsWith("__Secure-") && (attrs.secure == false))
-        @panic(problem(name, "has the __Secure- prefix without Secure"));
+        panic(problem(name, "has the __Secure- prefix without Secure"));
     val hostOk = attrs.secure && (path == "/") && (domain == "");
     if (name.startsWith("__Host-") && (hostOk == false))
-        @panic(
+        panic(
             problem(
                 name,
                 "has the __Host- prefix without Secure, Path=/ and no Domain",

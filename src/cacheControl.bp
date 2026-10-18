@@ -11,6 +11,8 @@
 //// `max-age` to be immutable for, `no-store` with anything that keeps a copy
 //// (`public`, `max-age`, `s-maxage`, `immutable`).
 
+import {failure.panic} from "std";
+
 pub type CacheDirectives(
     scope: string,
     maxAge: ?i32,
@@ -43,7 +45,7 @@ fn problem(what: string) -> string {
 
 fn withScope(d: CacheDirectives, scope: string) -> CacheDirectives {
     if ((d.scope != "") && (d.scope != scope))
-        @panic(problem("a response is public or private, not both"));
+        panic(problem("a response is public or private, not both"));
     return CacheDirectives(
         scope: scope,
         maxAge: d.maxAge,
@@ -67,7 +69,7 @@ pub fn withPrivate(d: CacheDirectives) -> CacheDirectives {
 
 fn demandAge(seconds: i32, name: string) -> i32 {
     if (seconds < 0)
-        @panic(problem(name + " is a number of seconds, 0 or more"));
+        panic(problem(name + " is a number of seconds, 0 or more"));
     return seconds;
 }
 
@@ -154,13 +156,13 @@ pub fn render(d: CacheDirectives) -> string {
         || (d.sharedMaxAge != null)
         || d.immutable;
     if (d.noStore && keeps)
-        @panic(
+        panic(
             problem(
                 "no-store forbids storing - it takes no public, max-age, s-maxage or immutable",
             ),
         );
     if (d.immutable && (d.maxAge == null))
-        @panic(problem("immutable needs a max-age to be immutable for"));
+        panic(problem("immutable needs a max-age to be immutable for"));
     var parts: Array<string> = [];
     if (d.scope != "") parts.push(d.scope);
     if (d.noStore) parts.push("no-store");
