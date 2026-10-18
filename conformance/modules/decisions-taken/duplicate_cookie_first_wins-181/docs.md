@@ -1,0 +1,3 @@
+# Decision 181 — † A duplicated cookie name: first wins, everywhere (RFC 6265 § 5.4); `rakun-session`'s `session_cookie` changes from las
+
+[draft/main.bp](draft/main.bp)

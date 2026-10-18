@@ -1,0 +1,3 @@
+//// Decision 400 — A cookie's hooks are nouns in cardume's family — `cookieValue`, `cookieState`, `cookieSetter`, `cookieReset`.
+
+pub fn main() -> void {}

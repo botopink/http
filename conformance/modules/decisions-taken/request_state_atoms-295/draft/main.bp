@@ -1,0 +1,3 @@
+//// Decision 295 — Request state is atoms, read and written through `use`
+
+pub fn main() -> void {}
