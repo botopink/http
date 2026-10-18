@@ -119,6 +119,5 @@ pub fn trimOws(s: string) -> string {
 
 // An `i32` read as an `i64` — an integer literal is `i32` and botopink has no
 // widening conversion, so it crosses a cell (std's `io/clock` does the same).
-#[@External.Node("""($0)""")]
-#[@External.Erlang("""($0)""")]
+#[@external(.Node("""($0)"""), .Erlang("""($0)"""))]
 pub declare fn wide(n: i32) -> i64;
