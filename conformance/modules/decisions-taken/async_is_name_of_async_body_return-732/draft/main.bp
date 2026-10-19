@@ -1,0 +1,39 @@
+//// Decision 732 — (a): `Async<T>` is the one name of an `async` body's return type; `Task` is no name of the prelude.
+
+import {io.terminal} from "std";
+import {io.http} from "std";
+import {status} from "http";
+
+// `Task` names no type of the prelude: a program may declare its own.
+type Task(title: string);
+
+fn request(url: string) -> Async<Result<http.Response, http.HttpError>> {
+    return http.fetch(http.Request(method: .Get, url: url));
+}
+
+async fn statusOf(url: string) -> Async<Result<i32, http.HttpError>> {
+    val resp = try await request(url);
+    return resp.status;
+}
+
+// Without the marker the body returns the whole type.
+fn ready() -> Async<i32> {
+    return Async.resolve(200);
+}
+
+fn report(r: Result<i32, http.HttpError>) -> string {
+    return case r {
+        Ok(code) -> code.toString() + " " + status.reasonPhrase(code);
+        Error(NotAllowedOnHost) -> "not allowed on this host";
+        Error(Network(_)) -> "network error";
+        Error(Timeout) -> "timed out";
+    };
+}
+
+pub async fn main() -> Async<void> {
+    val todo = Task(title: "write the report");
+    terminal.print(todo.title);
+    terminal.print(report(await statusOf("http://127.0.0.1:9/")));
+    val code = await ready();
+    terminal.print(code.toString() + " " + status.reasonPhrase(code));
+}
