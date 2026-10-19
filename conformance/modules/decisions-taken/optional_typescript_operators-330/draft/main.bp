@@ -35,7 +35,7 @@ pub fn main() -> void {
     // An integer literal is `i32`; the epoch as `i64` comes from a `Duration`.
     val epoch = clock.millis(0).millis;
     val seen = Visit.read(header, epoch);
-    val visits: ?array<Visit.Seen> = if (seen != null) [seen] else null;
+    val visits: ?Visit.Seen[] = if (seen != null) [seen] else null;
     val first = visits?.[0];
     terminal.print(first?.session ?? "anonymous");
     terminal.print(first?.at ?? epoch);

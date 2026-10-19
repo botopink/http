@@ -13,12 +13,12 @@ fn report(r: Result<i32, http.HttpError>) -> string {
     };
 }
 
-fn statusOf(url: string) -> Task<Result<i32, http.HttpError>> {
+async fn statusOf(url: string) -> Async<Result<i32, http.HttpError>> {
     val resp = try await http.fetch(http.Request(method: .Get, url: url));
     return resp.status;
 }
 
-fn login(url: string, sid: string) -> Task<Result<i32, http.HttpError>> {
+async fn login(url: string, sid: string) -> Async<Result<i32, http.HttpError>> {
     val header = http.Header(name: "cookie", value: cookie.formatHeader([#("SID", sid)]));
     val resp = try await http.fetch(
         http.Request(
@@ -31,7 +31,7 @@ fn login(url: string, sid: string) -> Task<Result<i32, http.HttpError>> {
     return resp.status;
 }
 
-pub fn main() -> Task<void> {
+pub async fn main() -> Async<void> {
     terminal.print(report(await statusOf("http://127.0.0.1:9/")));
     terminal.print(report(await login("http://127.0.0.1:9/login", "a1")));
 }

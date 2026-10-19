@@ -10,7 +10,7 @@ pub fn main() -> void {
     terminal.print(cookie.get("SID=%zz; SID=second", "SID") ?? "absent");
     // Each name once, its first value, in header order.
     val pairs = cookie.parse("theme=dark; SID=a1; theme=light; lang=pt");
-    terminal.print(pairs.map({ p -> p.0 + "=" + p.1 }).join(", "));
+    terminal.print(pairs.map({ p -> p._0 + "=" + p._1 }).join(", "));
     // A header written with a name twice reads back its first value.
     val header = cookie.formatHeader([#("SID", "a1"), #("SID", "b2")]);
     terminal.print(header);

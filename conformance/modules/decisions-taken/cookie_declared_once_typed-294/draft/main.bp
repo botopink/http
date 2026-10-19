@@ -1,7 +1,7 @@
 //// Decision 294 — A cookie is declared once, typed:
 
 import {io.terminal} from "std";
-import {io.clock} from "std";
+import {io.clock.days} from "std";
 import {cookie, cookie.Cookie} from "http";
 
 pub type SessionId(value: string)
@@ -12,7 +12,7 @@ pub val sessionCookie = Cookie<SessionId>(
     "session",
     httpOnly: true,
     secure: true,
-    maxAge: clock.days(30),
+    maxAge: days(30),
 );
 
 pub val themeCookie = Cookie<Theme>("theme", httpOnly: false);

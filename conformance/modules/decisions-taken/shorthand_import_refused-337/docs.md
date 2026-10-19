@@ -4,7 +4,7 @@ The example prints the session a request carries. `draft/session.bp` is a module
 
 The refused spelling is the shorthand. `import {sessionOf};` has no `from`, and its first segment does not name a module of the package. It is refused with `shorthand-import` at the item. Only `session` declares `sessionOf` as `pub`, so the error gives the fix: `write import {session.sessionOf};`, which is the line the example uses. A bare `import {get};` does not reach the library either, even though `http` declares that name; it has to be written `from "http"`.
 
-The decision's parts on `mod` / `pub mod` namespaces and re-export by value are overtaken by decision 592 (ctr-x): a file is a module, and there is no `mod`. The library's own `src/root.bp` still lists its modules with `mod` / `pub mod`; that goes with the codemod of decision 592 over the library.
+337 (2)'s `mod m;` namespace is replaced by decision 592 (1): every `.bp` under `src/` is a module, its path its name, and there is no `mod` / `pub mod`; with 337 (3) there is no combined form and no re-export syntax. The library's own `src/root.bp` still lists its modules with `mod` / `pub mod`; that goes with the codemod of decision 592 over the library.
 
 Cells in this repository that prove it: none yet. The library's modules already import each other by path (`import {lexical.sub};` in `src/mime.bp`); its feature cells come with front 155's Conformance step (decision 465).
 
