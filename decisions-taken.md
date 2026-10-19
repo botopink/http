@@ -1,5 +1,11 @@
 Generated from botopink/projects · specs/decisions-taken-steps.md — edit there.
 
+## Rows 1–143 — 1.0.5-beta and 1.0.10-beta
+
+| # | Id | Rule in force | Binds | Cell |
+|---|---|---|---|---|
+| 108 | 99 (99-a) · (the maintainer, 2026-09-24) | **`getContex` → `getContext`** **Decided 2026-09-24 by the maintainer: (a)** to question 99. The context-retrieval intrinsic is renamed `getContext` everywhere it is spelled — `libs/std/src/builtins.d.bp`, `builtins_fns.d.bp`, `docs.md`, `comptime/stdlib/prelude.zig`, `comptime.zig`, `env.zig`, `infer.zig` — and the two diagnostic codes (`context-getcontex-outside-context-fn`, `context-getcontex-expects-type`), their rules RC4/RC5 in `comptime/tests/infer_errors.zig` and the three snapshots whose slug carries the name move with it. No library spells it today. Its gate is decision 104's one flag. Implements: the `effect-chain` task, in the same sweep as decisions 102–104. | the `effect-chain` task, in the same sweep as decisions 102–104 | |
+
 ## Language & checker
 
 | # | Id | Rule in force | Binds | Cell |
