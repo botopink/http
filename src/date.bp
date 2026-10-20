@@ -15,11 +15,11 @@
 import {io.clock, failure.panic} from "std";
 import {lexical.charOf, lexical.sub, lexical.isDigits, lexical.digitsValue, lexical.padded, lexical.idiv, lexical.wide};
 
-fn dayNames() -> Array<string> {
+fn dayNames() -> array<string> {
     return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 }
 
-fn longDayNames() -> Array<string> {
+fn longDayNames() -> array<string> {
     return [
         "Monday",
         "Tuesday",
@@ -31,7 +31,7 @@ fn longDayNames() -> Array<string> {
     ];
 }
 
-fn monthNames() -> Array<string> {
+fn monthNames() -> array<string> {
     return [
         "Jan",
         "Feb",

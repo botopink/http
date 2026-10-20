@@ -163,7 +163,7 @@ pub fn render(d: CacheDirectives) -> string {
         );
     if (d.immutable && (d.maxAge == null))
         panic(problem("immutable needs a max-age to be immutable for"));
-    var parts: Array<string> = [];
+    var parts: array<string> = [];
     if (d.scope != "") parts.push(d.scope);
     if (d.noStore) parts.push("no-store");
     if (d.noCache) parts.push("no-cache");

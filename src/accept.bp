@@ -22,7 +22,7 @@ import {lexical.charOf, lexical.sub, lexical.isToken, lexical.isAlpha, lexical.a
 pub type MediaRange(
     mainType: string,
     subType: string,
-    params: Array<#(string, string)>,
+    params: array<#(string, string)>,
     q: i32,
 )
 
@@ -84,7 +84,7 @@ fn parameterOf(raw: string) -> Parameter {
 // The weight among `pieces` (the parameters of one element), the first `q`
 // deciding; `-1` when a parameter does not parse. Parameters after `q` are
 // accept-ext and only checked for shape.
-fn weightOf(pieces: Array<string>) -> i32 {
+fn weightOf(pieces: array<string>) -> i32 {
     var q = 1000;
     var seenQ = false;
     var bad = false;
@@ -100,8 +100,8 @@ fn weightOf(pieces: Array<string>) -> i32 {
 }
 
 // The media-type parameters among `pieces`: those before the `q`.
-fn mediaParamsOf(pieces: Array<string>) -> Array<#(string, string)> {
-    var out: Array<#(string, string)> = [];
+fn mediaParamsOf(pieces: array<string>) -> array<#(string, string)> {
+    var out: array<#(string, string)> = [];
     var done = false;
     for (pieces) { piece ->
         val p = parameterOf(piece);
@@ -139,8 +139,8 @@ fn mediaRangeOf(element: string) -> ?MediaRange {
 
 // The media ranges of an `Accept` header, in header order, without the ones
 // that do not parse.
-pub fn parseAccept(header: string) -> Array<MediaRange> {
-    var out: Array<MediaRange> = [];
+pub fn parseAccept(header: string) -> array<MediaRange> {
+    var out: array<MediaRange> = [];
     for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?MediaRange = mediaRangeOf(element);
@@ -150,7 +150,7 @@ pub fn parseAccept(header: string) -> Array<MediaRange> {
     return out;
 }
 
-fn hasParam(params: Array<#(string, string)>, kv: #(string, string)) -> bool {
+fn hasParam(params: array<#(string, string)>, kv: #(string, string)) -> bool {
     return params.filter({ p -> (p.0 == kv.0) && (p.1 == kv.1) }).length > 0;
 }
 
@@ -194,7 +194,7 @@ pub fn mediaQuality(accept: string, mediaType: string) -> i32 {
 
 // The media type of `offered` that `accept` weighs highest, ties going to the
 // order of `offered`; `""` when it accepts none of them (every weight 0).
-pub fn negotiateMedia(accept: string, offered: Array<string>) -> string {
+pub fn negotiateMedia(accept: string, offered: array<string>) -> string {
     var chosen = "";
     var bestQ = 0;
     for (offered) { m ->
@@ -244,7 +244,7 @@ pub fn tokenQuality(header: string, token: string) -> i32 {
 
 // The token of `offered` the header weighs highest, ties going to the order
 // of `offered`; `""` when every weight is 0.
-pub fn negotiateToken(header: string, offered: Array<string>) -> string {
+pub fn negotiateToken(header: string, offered: array<string>) -> string {
     var chosen = "";
     var bestQ = 0;
     for (offered) { t ->
@@ -291,15 +291,15 @@ fn languageRangeOf(element: string) -> ?LanguageRange {
 // The ranges of an `Accept-Language` header, highest weight first and header
 // order among equal weights. A range weighing 0 is kept — it excludes — and
 // the caller skips it when choosing.
-pub fn parseAcceptLanguage(header: string) -> Array<LanguageRange> {
-    var entries: Array<LanguageRange> = [];
+pub fn parseAcceptLanguage(header: string) -> array<LanguageRange> {
+    var entries: array<LanguageRange> = [];
     for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?LanguageRange = languageRangeOf(element);
             if (r != null) entries.push(r);
         }
     }
-    var out: Array<LanguageRange> = [];
+    var out: array<LanguageRange> = [];
     var level = 1000;
     while (level >= 0) {
         for (entries) { e ->

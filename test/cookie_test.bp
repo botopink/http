@@ -19,7 +19,7 @@ fn shown(found: ?string) -> string {
     return found ?? "<absent>";
 }
 
-fn pairsText(pairs: Array<#(string, string)>) -> string {
+fn pairsText(pairs: array<#(string, string)>) -> string {
     return pairs.map({ p -> p.0 + "=" + p.1 }).join("|");
 }
 

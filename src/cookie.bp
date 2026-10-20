@@ -83,9 +83,9 @@ fn isHex(c: string) -> bool {
 
 // Every `name=value` pair of a `Cookie` header, in header order, each name
 // once — its first occurrence — and without the refused ones.
-pub fn parse(header: string) -> Array<#(string, string)> {
-    var out: Array<#(string, string)> = [];
-    var seen: Array<string> = [];
+pub fn parse(header: string) -> array<#(string, string)> {
+    var out: array<#(string, string)> = [];
+    var seen: array<string> = [];
     for (header.split(";")) { piece ->
         val chunk = trimOws(piece);
         val eq = chunk.indexOf("=");
@@ -216,8 +216,8 @@ pub fn serialize(
 // A `Cookie` request header carrying `pairs` in order — `name=value; …`,
 // each value percent-encoded as `serialize` writes it, so `parse` reads the
 // pairs back. A name twice is written twice; the reader keeps the first.
-pub fn formatHeader(pairs: Array<#(string, string)>) -> string {
-    var parts: Array<string> = [];
+pub fn formatHeader(pairs: array<#(string, string)>) -> string {
+    var parts: array<string> = [];
     for (pairs) { p ->
         val _n = demandName(p.0);
         val _v = demandValue(p.0, p.1);
