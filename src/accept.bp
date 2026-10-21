@@ -88,7 +88,7 @@ fn weightOf(pieces: array<string>) -> i32 {
     var q = 1000;
     var seenQ = false;
     var bad = false;
-    for piece in pieces {
+    for (pieces) { piece ->
         val p = parameterOf(piece);
         if (p.ok == false) bad = true;
         if ((seenQ == false) && (p.name == "q")) {
@@ -103,7 +103,7 @@ fn weightOf(pieces: array<string>) -> i32 {
 fn mediaParamsOf(pieces: array<string>) -> array<#(string, string)> {
     var out: array<#(string, string)> = [];
     var done = false;
-    for piece in pieces {
+    for (pieces) { piece ->
         val p = parameterOf(piece);
         if (p.name == "q") done = true;
         if ((done == false) && p.ok) {
@@ -141,7 +141,7 @@ fn mediaRangeOf(element: string) -> ?MediaRange {
 // that do not parse.
 pub fn parseAccept(header: string) -> array<MediaRange> {
     var out: array<MediaRange> = [];
-    for element in header.split(",") {
+    for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?MediaRange = mediaRangeOf(element);
             if (r != null) out.push(r);
@@ -182,7 +182,7 @@ pub fn mediaQuality(accept: string, mediaType: string) -> i32 {
     if (trimOws(accept) == "") return 1000;
     var best = 0;
     var q = 0;
-    for r in parseAccept(accept) {
+    for (parseAccept(accept)) { r ->
         val s = specificity(r, t);
         if (s > best) {
             best = s;
@@ -197,7 +197,7 @@ pub fn mediaQuality(accept: string, mediaType: string) -> i32 {
 pub fn negotiateMedia(accept: string, offered: array<string>) -> string {
     var chosen = "";
     var bestQ = 0;
-    for m in offered {
+    for (offered) { m ->
         val q = mediaQuality(accept, m);
         if (q > bestQ) {
             chosen = m;
@@ -230,7 +230,7 @@ pub fn tokenQuality(header: string, token: string) -> i32 {
     val want = token.toLower();
     var own = 0 - 1;
     var star = 0 - 1;
-    for element in header.split(",") {
+    for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val e = tokenEntryOf(element);
             if ((own < 0) && (e.name == want)) own = e.q;
@@ -247,7 +247,7 @@ pub fn tokenQuality(header: string, token: string) -> i32 {
 pub fn negotiateToken(header: string, offered: array<string>) -> string {
     var chosen = "";
     var bestQ = 0;
-    for t in offered {
+    for (offered) { t ->
         val q = tokenQuality(header, t);
         if (q > bestQ) {
             chosen = t;
@@ -293,7 +293,7 @@ fn languageRangeOf(element: string) -> ?LanguageRange {
 // the caller skips it when choosing.
 pub fn parseAcceptLanguage(header: string) -> array<LanguageRange> {
     var entries: array<LanguageRange> = [];
-    for element in header.split(",") {
+    for (header.split(",")) { element ->
         if (trimOws(element) != "") {
             val r: ?LanguageRange = languageRangeOf(element);
             if (r != null) entries.push(r);
@@ -302,7 +302,7 @@ pub fn parseAcceptLanguage(header: string) -> array<LanguageRange> {
     var out: array<LanguageRange> = [];
     var level = 1000;
     while (level >= 0) {
-        for e in entries {
+        for (entries) { e ->
             if (e.q == level) out.push(e);
         }
         level = level - 1;

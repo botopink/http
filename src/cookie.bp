@@ -86,7 +86,7 @@ fn isHex(c: string) -> bool {
 pub fn parse(header: string) -> array<#(string, string)> {
     var out: array<#(string, string)> = [];
     var seen: array<string> = [];
-    for piece in header.split(";") {
+    for (header.split(";")) { piece ->
         val chunk = trimOws(piece);
         val eq = chunk.indexOf("=");
         if (eq > 0) {
@@ -109,7 +109,7 @@ pub fn parse(header: string) -> array<#(string, string)> {
 pub fn get(header: string, name: string) -> ?string {
     var found: ?string = null;
     var decided = false;
-    for piece in header.split(";") {
+    for (header.split(";")) { piece ->
         val chunk = trimOws(piece);
         val eq = chunk.indexOf("=");
         if ((decided == false) && (eq > 0))
@@ -218,7 +218,7 @@ pub fn serialize(
 // pairs back. A name twice is written twice; the reader keeps the first.
 pub fn formatHeader(pairs: array<#(string, string)>) -> string {
     var parts: array<string> = [];
-    for p in pairs {
+    for (pairs) { p ->
         val _n = demandName(p.0);
         val _v = demandValue(p.0, p.1);
         parts.push(p.0 + "=" + encoding.percentEncode(p.1));
