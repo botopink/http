@@ -37,7 +37,7 @@ onze-assets' and jhonstart's own `extensionOf` / `render`.
 
 ```text
 http/
-├── botopink.json      "name": "http", "target": "erlang", "targets": ["erlang", "commonJS"]
+├── botopink.json      "name": "http", "target": "erlang", "targets": ["erlang", "beam", "commonJS"] (no wasm: `wide` (its own) and std `io.clock.toCivil` have no `.Wasm(…)` binding, decision 993 (4))
 ├── AGENTS.md
 ├── src/root.bp        mod lexical; pub mod cookie; pub mod accept; pub mod mime; pub mod status; pub mod date; pub mod byteRange; pub mod cacheControl;
 ├── src/lexical.bp     internal: ASCII character classes (token, cookie-octet, printable), charOf/sub, digits, trimOws, idiv, wide
